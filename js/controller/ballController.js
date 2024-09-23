@@ -1,29 +1,19 @@
 let workerBall;
-let workerTimer, workerGoalkeeper; 
-let angleInput, shootButton; 
+let angleInput, shootButton;
 let angleDirection = 1;
 let angleInterval;
-let initialBallPosition = { x: 400, y: 500 }; 
-let goalkeeper;
+let initialBallPosition = { x: 400, y: 500 };
 
 function initBallController(scene, ball) {
-
     angleInput = document.getElementById('angle');
     shootButton = document.getElementById('shootButton');
-
-    goalkeeper = scene.physics.add.image(400, 200, 'goalkeeper'); 
-    goalkeeper.setCollideWorldBounds(true); 
-
 
     startAutoAdjustAngle();
 
     shootButton.addEventListener('click', function () {
         shootBall(scene, ball);
-        stopAutoAdjustAngle(); 
+        stopAutoAdjustAngle();
     });
-
-    startTimer();
-    startGoalkeeper();
 }
 
 function startAutoAdjustAngle() {
@@ -31,9 +21,9 @@ function startAutoAdjustAngle() {
         let visualAngle = parseInt(angleInput.value);
         let internalAngle = mapToInternalAngle(visualAngle);
 
-        if (internalAngle >= 61) {
+        if (internalAngle >= 65) {
             angleDirection = -1;
-        } else if (internalAngle <= 16) {
+        } else if (internalAngle <= 25) {
             angleDirection = 1;
         }
 
@@ -47,24 +37,11 @@ function stopAutoAdjustAngle() {
     clearInterval(angleInterval);
 }
 
-function resetBallAndAngle(scene, ball) {
-    ball.setVelocity(0, 0);
-    ball.setAcceleration(0, 0);
-    ball.setPosition(initialBallPosition.x, initialBallPosition.y);
-    
-    angleInput.value = 45;
-    document.getElementById('angleValue').textContent = 45;
-
-    startAutoAdjustAngle();
-}
-
 function shootBall(scene, ball) {
     const visualAngle = parseInt(angleInput.value);
     const internalAngle = mapToInternalAngle(visualAngle);
     const angle = Phaser.Math.DegToRad(internalAngle);
-    const power = 5;
-
-    console.log(`Ángulo visual: ${visualAngle}, Ángulo interno: ${internalAngle}`);
+    const power = 7;
 
     workerBall = new Worker('js/workers/workerBall.js');
     workerBall.postMessage({ angle, power });
@@ -72,18 +49,13 @@ function shootBall(scene, ball) {
     workerBall.onmessage = function (e) {
         const { x, y } = e.data;
         let adjustedX = 400;
-        const internalAngleValue = internalAngle;
 
-        if (internalAngleValue < 45) {
-            adjustedX = 400 - x * 0.1;
-        } else if (internalAngleValue >= 45 && internalAngleValue <= 55) {
+        if (internalAngle < 45) {
+            adjustedX = 400 - x * 0.5;
+        } else if (internalAngle >= 45 && internalAngle <= 55) {
             adjustedX = 400;
-        } else if (internalAngleValue > 55) {
-            if (internalAngleValue > 77) {
-                adjustedX = 400 + x * 1.5;
-            } else {
-                adjustedX = 400 + x;
-            }
+        } else if (internalAngle > 55) {
+            adjustedX = 400 + x * 1.5;
         }
 
         const posY = 500 - y;
@@ -99,29 +71,21 @@ function shootBall(scene, ball) {
     };
 }
 
-function startTimer() {
-    const initialTime = 10;
-    workerTimer = new Worker('js/workers/workerTimer.js');
-    workerTimer.postMessage(initialTime);
+function resetBallAndAngle(scene, ball) {
+    ball.setVelocity(0, 0);
+    ball.setAcceleration(0, 0);
+    ball.setVisible(true);
+    ball.setPosition(initialBallPosition.x, initialBallPosition.y);
 
-    workerTimer.onmessage = function (e) {
-        if (e.data === 'timeout') {
-            console.log('¡Tiempo agotado!');
-            resetBallAndAngle(scene, ball); 
-        } else {
-            console.log(`Tiempo restante: ${e.data} segundos`);
-            document.getElementById('timer').textContent = `Tiempo: ${e.data} s`;
-        }
-    };
-}
+    if (workerBall) {
+        workerBall.terminate();
+        workerBall = null;
+    }
 
-function startGoalkeeper() {
-    workerGoalkeeper = new Worker('js/workers/workerGoalkeeper.js');
+    angleInput.value = 45;
+    document.getElementById('angleValue').textContent = 45;
 
-    workerGoalkeeper.onmessage = function (e) {
-        const position = e.data;
-        goalkeeper.setPosition(position + 200, 200);
-    };
+    startAutoAdjustAngle();
 }
 
 function mapToInternalAngle(visualAngle) {

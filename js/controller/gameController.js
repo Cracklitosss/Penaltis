@@ -34,6 +34,7 @@ function create() {
     ball.setCollideWorldBounds(true);
 
     initBallController(this, ball);
+    initGoalkeeper(this);
 }
 
 function update() {

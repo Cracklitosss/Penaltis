@@ -1,19 +1,29 @@
-// goalkeeperController.js
-export function createGoalkeeper(scene) {
-    const goalkeeper = scene.physics.add.sprite(400, 400, 'goalkeeper');
-    goalkeeper.setCollideWorldBounds(true);  // Evita que el portero salga del campo
-    return goalkeeper;
+let workerGoalkeeper;
+let goalkeeper;
+
+// Función para inicializar al portero
+function initGoalkeeper(scene) {
+    goalkeeper = scene.physics.add.image(400, 245, 'goalkeeper');  // Inicializamos el portero en el centro
+    goalkeeper.setCollideWorldBounds(false);  // Aseguramos que el portero no salga de los límites
+
+    startGoalkeeperWorker();  // Iniciar el Web Worker para mover al portero
 }
 
-export function moveGoalkeeper(workerGoalkeeper, goalkeeper) {
-    workerGoalkeeper.postMessage({});
+// Función para iniciar el Worker que controla al portero
+function startGoalkeeperWorker() {
+    workerGoalkeeper = new Worker('js/workers/workerGoalkeeper.js');
 
-    workerGoalkeeper.onmessage = function(e) {
-        const { x } = e.data;  // La posición horizontal del portero
-        goalkeeper.setPosition(x, goalkeeper.y);  // Actualizar posición del portero
+    workerGoalkeeper.onmessage = function (e) {
+        const position = e.data;
+        goalkeeper.setPosition(400 + position, 245);  // Ajustamos la posición en Y a 245 y usamos la posición en X calculada
     };
+}
 
-    workerGoalkeeper.onerror = function(error) {
-        console.error("Error en el Web Worker de portero:", error.message);
-    };
+
+// Función para detener el Worker del portero si es necesario
+function stopGoalkeeperWorker() {
+    if (workerGoalkeeper) {
+        workerGoalkeeper.terminate();  // Detener el Worker si está activo
+        workerGoalkeeper = null;
+    }
 }
