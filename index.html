@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Penaltis</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+</head>
+<body>
+    <div id="game-container"></div>
+
+    <!-- Control de dirección -->
+    <div id="controls">
+        <label for="angle">Ángulo:</label>
+        <input type="range" id="angle" name="angle" min="0" max="90" value="45">
+        <span id="angleValue">45</span>°
+    </div>
+
+    <button id="shootButton">Disparar</button>
+
+    <script src="js/controller/gameController.js"></script>
+    <script src="js/controller/ballController.js"></script>
+</body>
+</html>
