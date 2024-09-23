@@ -1,13 +1,13 @@
 onmessage = function(e) {
-    let timeRemaining = e.data;  // El tiempo inicial que recibimos (10 segundos)
+    let timeRemaining = e.data; 
     
     const timer = setInterval(() => {
         if (timeRemaining > 0) {
             timeRemaining--;
-            postMessage(timeRemaining);  // Enviar el tiempo restante al controlador
+            postMessage(timeRemaining);
         } else {
-            clearInterval(timer);  // Detener el temporizador
-            postMessage('timeout');  // Enviar el mensaje de tiempo agotado
+            clearInterval(timer); 
+            postMessage('timeout');
         }
-    }, 1000);  // Actualizar cada segundo
+    }, 1000);
 };

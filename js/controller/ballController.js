@@ -10,13 +10,13 @@ function initBallController(scene, ball) {
     shootButton = document.getElementById('shootButton');
 
     startAutoAdjustAngle();
-    startTimer();  // Iniciar el temporizador cuando se inicialice el controlador
+    startTimer();
 
     shootButton.addEventListener('click', function () {
         shootBall(scene, ball);
         stopAutoAdjustAngle();
-        stopTimer();  // Detener el temporizador al disparar
-        startTimer();  // Reiniciar el temporizador para la próxima ronda
+        stopTimer();
+        startTimer();
     });
 }
 
@@ -96,29 +96,38 @@ function mapToInternalAngle(visualAngle) {
     return Math.max(10, Math.min(80, visualAngle));
 }
 
-// Lógica del Web Worker para el temporizador
 function startTimer() {
-    const initialTime = 10;  // Tiempo en segundos
+    const initialTime = 10; 
     workerTimer = new Worker('js/workers/workerTimer.js');
-    workerTimer.postMessage(initialTime);  // Enviar el tiempo inicial al Worker
+    workerTimer.postMessage(initialTime); 
 
     workerTimer.onmessage = function (e) {
         if (e.data === 'timeout') {
-            console.log('¡Tiempo agotado!');
-            alert('¡Tiempo agotado! Dispara más rápido la próxima vez.');
-            resetBallAndAngle(scene, ball);  // Reiniciar el balón cuando el tiempo se agote
-            stopTimer();  // Detener el temporizador después del tiempo agotado
+            showNotification('¡Tiempo agotado! Dispara más rápido la proxima vez.');
+            resetBallAndAngle(scene, ball);
+            stopTimer(); 
+            startTimer();
         } else {
-            console.log(`Tiempo restante: ${e.data} segundos`);
-            document.getElementById('timer').textContent = `Tiempo: ${e.data} s`;  // Actualizar el temporizador en pantalla
-        }
+            document.getElementById('timer').textContent = `Tiempo: ${e.data} s`; 
+             }
     };
 }
 
-// Función para detener el Web Worker del temporizador
 function stopTimer() {
     if (workerTimer) {
-        workerTimer.terminate();  // Detener el Worker si está activo
+        workerTimer.terminate(); 
         workerTimer = null;
     }
+}
+
+function showNotification(message) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.style.display = 'block';
+    notification.classList.add('show');
+
+    setTimeout(() => {
+        notification.classList.remove('show');
+        notification.style.display = 'none';
+    }, 2000);
 }
