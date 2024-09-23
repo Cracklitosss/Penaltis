@@ -1,25 +1,23 @@
-// Definimos el rango de movimiento del portero en píxeles
-const maxMovement = 220;  // El portero solo se puede mover 100 píxeles a la izquierda y a la derecha
-let direction = 1;  // 1 es a la derecha, -1 es a la izquierda
-const speed = 3;  // Velocidad del portero
-let position = 0;  // Posición actual del portero
+const maxMovement = 220; 
+let direction = 1;
+const speed = 3;
+let position = 0;  
 
 function moveGoalkeeper() {
     setInterval(() => {
-        // Limitar la posición a los límites del movimiento para evitar que sobrepase
+
         if (direction === 1 && position >= maxMovement) {
-            position = maxMovement;  // Fijar la posición exactamente en el límite
-            direction = -1;  // Cambiar dirección hacia la izquierda
+            position = maxMovement;
+            direction = -1;  
         } else if (direction === -1 && position <= -maxMovement) {
-            position = -maxMovement;  // Fijar la posición exactamente en el límite
-            direction = 1;  // Cambiar dirección hacia la derecha
+            position = -maxMovement;  
+            direction = 1; 
         } else {
-            position += direction * speed;  // Actualizar la posición dentro del rango permitido
+            position += direction * speed; 
         }
 
-        // Enviar la posición calculada al controlador principal
         postMessage(position);  
-    }, 16);  // Intervalo para simular 60 FPS
+    }, 16); 
 }
 
 moveGoalkeeper();

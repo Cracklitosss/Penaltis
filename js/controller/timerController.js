@@ -5,9 +5,9 @@ export function startTimer(workerTimer, onTimeUpdate, onTimeEnd) {
     workerTimer.onmessage = function(e) {
         const { timeRemaining } = e.data;
         if (timeRemaining > 0) {
-            onTimeUpdate(timeRemaining);  // Actualiza la pantalla con el tiempo restante
+            onTimeUpdate(timeRemaining);
         } else {
-            onTimeEnd();  // Llamar al final del tiempo
+            onTimeEnd(); 
         }
     };
 
