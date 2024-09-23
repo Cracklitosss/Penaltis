@@ -33,6 +33,7 @@ function create() {
     ball = this.physics.add.image(400, 500, 'ball');
     ball.setCollideWorldBounds(true);
 
+    
     initBallController(this, ball);
     initGoalkeeper(this);
 }

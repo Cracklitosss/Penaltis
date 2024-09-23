@@ -6,6 +6,7 @@ function initGoalkeeper(scene) {
     goalkeeper.setCollideWorldBounds(false); 
 
     startGoalkeeperWorker();
+    
 }
 
 function startGoalkeeperWorker() {
