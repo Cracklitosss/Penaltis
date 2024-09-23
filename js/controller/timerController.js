@@ -1,17 +1,13 @@
-// timerController.js
-export function startTimer(workerTimer, onTimeUpdate, onTimeEnd) {
-    workerTimer.postMessage({});
-
-    workerTimer.onmessage = function(e) {
-        const { timeRemaining } = e.data;
+onmessage = function(e) {
+    let timeRemaining = e.data;  // El tiempo inicial que recibimos (10 segundos)
+    
+    const timer = setInterval(() => {
         if (timeRemaining > 0) {
-            onTimeUpdate(timeRemaining);
+            timeRemaining--;
+            postMessage(timeRemaining);  // Enviar el tiempo restante al controlador
         } else {
-            onTimeEnd(); 
+            clearInterval(timer);  // Detener el temporizador
+            postMessage('timeout');  // Enviar el mensaje de tiempo agotado
         }
-    };
-
-    workerTimer.onerror = function(error) {
-        console.error("Error en el Web Worker del cronómetro:", error.message);
-    };
-}
+    }, 1000);  // Actualizar cada segundo
+};
