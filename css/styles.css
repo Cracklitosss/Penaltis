@@ -59,6 +59,11 @@ html, body {
     color: black;
 }
 
+#angleValue {
+    display: none;
+}
+
+
 .notification {
     position: fixed;
     bottom: 20px;

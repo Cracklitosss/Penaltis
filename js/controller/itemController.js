@@ -80,7 +80,7 @@ function shootBall(scene, ball) {
             adjustedX = 750 + x * 1.5;
         }
 
-        const posY = 600 - y;
+        const posY = 610 - y;
         ball.setPosition(adjustedX, posY);
     };
 
@@ -97,7 +97,7 @@ function resetBallAndAngle(scene, ball) {
     ball.setVelocity(0, 0);
     ball.setAcceleration(0, 0);
     ball.setVisible(true);
-    ball.setPosition(750, 600);
+    ball.setPosition(750, 610);
 
     if (workerBall) {
         workerBall.terminate();
@@ -123,7 +123,7 @@ function startTimer() {
 
     workerTimer.onmessage = function (e) {
         if (e.data === 'timeout') {
-            showNotification('¡Tiempo agotado! Dispara más rápido la proxima vez.');
+            showNotification('¡Tiempo agotado! Dispara más rapido la proxima vez.');
             resetBallAndAngle(scene, ball);
             stopTimer(); 
             startTimer();
