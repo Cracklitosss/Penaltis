@@ -26,11 +26,8 @@ onmessage = function(e) {
             return;
         }
 
-        console.log(`Tiempo: ${time}, Posición x: ${x}, Posición y: ${y}`);
-
         if (y <= 0) {
             postMessage({ x, y: 0 }); 
-            console.log('El balón ha tocado el suelo. Worker finalizado.');
             triggerReset();
             return;
         }
