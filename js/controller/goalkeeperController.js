@@ -2,11 +2,11 @@ let workerGoalkeeper;
 let goalkeeper;
 
 function initGoalkeeper(scene) {
-    goalkeeper = scene.physics.add.image(400, 245, 'goalkeeper'); 
+    goalkeeper = scene.physics.add.image(730, 300, 'goalkeeper'); 
+    goalkeeper.setDisplaySize(270, 340);
     goalkeeper.setCollideWorldBounds(false); 
 
     startGoalkeeperWorker();
-    
 }
 
 function startGoalkeeperWorker() {
@@ -14,7 +14,7 @@ function startGoalkeeperWorker() {
 
     workerGoalkeeper.onmessage = function (e) {
         const position = e.data;
-        goalkeeper.setPosition(400 + position, 245);
+        goalkeeper.setPosition(730 + position, 300);
     };
 }
 

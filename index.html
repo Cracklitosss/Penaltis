@@ -10,15 +10,19 @@
 <body>
     <div id="game-container"></div>
 
-    <!-- Control de dirección -->
-    <div id="controls">
-        <label for="angle">Ángulo:</label>
-        <input type="range" id="angle" name="angle" min="0" max="90" value="45">
-        <span id="angleValue">45</span>°
-    </div>
-
+<!-- Contenedor para la dirección y disparo -->
+<div id="controls-shoot">
+    <label for="angle">Ángulo:</label>
+    <input type="range" id="angle" name="angle" min="10" max="80" value="45">
+    <span id="angleValue">45</span>
     <button id="shootButton">Disparar</button>
-    <p id="timer">Tiempo: 10 s</p>
+</div>
+
+<!-- Contenedor para el temporizador -->
+<div id="controls-timer">
+    <p id="timer">Tiempo: 0 s</p>
+</div>
+
 
     <!-- Contenedor de la notificación -->
     <div id="notification" style="display:none;" class="notification">
@@ -26,7 +30,7 @@
     </div>
 
     <script src="js/controller/gameController.js"></script>
-    <script src="js/controller/ballController.js"></script>
+    <script src="js/controller/itemController.js"></script>
     <script src="js/controller/goalkeeperController.js"></script>
 </body>
 </html>

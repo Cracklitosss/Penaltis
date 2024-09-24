@@ -5,18 +5,36 @@ let angleDirection = 1;
 let angleInterval;
 let initialBallPosition = { x: 400, y: 500 };
 
+//Balon
 function initBallController(scene, ball) {
     angleInput = document.getElementById('angle');
     shootButton = document.getElementById('shootButton');
 
     startAutoAdjustAngle();
-    startTimer();
+    
+    startTimer(
+        function onTimeout() {
+            showNotification('¡Tiempo agotado! Dispara más rápido la próxima vez.');
+            resetBallAndAngle(scene, ball); 
+        },
+        function onTick(timeRemaining) {
+            document.getElementById('timer').textContent = `Tiempo: ${timeRemaining} s`;  // Actualizar el tiempo en la pantalla
+        }
+    );
 
     shootButton.addEventListener('click', function () {
         shootBall(scene, ball);
         stopAutoAdjustAngle();
         stopTimer();
-        startTimer();
+        startTimer(
+            function onTimeout() {
+                showNotification('¡Tiempo agotado! Dispara más rápido la próxima vez.');
+                resetBallAndAngle(scene, ball);
+            },
+            function onTick(timeRemaining) {
+                document.getElementById('timer').textContent = `Tiempo: ${timeRemaining} s`;
+            }
+        ); 
     });
 }
 
@@ -52,17 +70,17 @@ function shootBall(scene, ball) {
 
     workerBall.onmessage = function (e) {
         const { x, y } = e.data;
-        let adjustedX = 400;
+        let adjustedX = 750;
 
         if (internalAngle < 45) {
-            adjustedX = 400 - x * 0.5;
+            adjustedX = 750 - x * 0.5;
         } else if (internalAngle >= 45 && internalAngle <= 55) {
-            adjustedX = 400;
+            adjustedX = 750;
         } else if (internalAngle > 55) {
-            adjustedX = 400 + x * 1.5;
+            adjustedX = 750 + x * 1.5;
         }
 
-        const posY = 500 - y;
+        const posY = 600 - y;
         ball.setPosition(adjustedX, posY);
     };
 
@@ -79,7 +97,7 @@ function resetBallAndAngle(scene, ball) {
     ball.setVelocity(0, 0);
     ball.setAcceleration(0, 0);
     ball.setVisible(true);
-    ball.setPosition(initialBallPosition.x, initialBallPosition.y);
+    ball.setPosition(750, 600);
 
     if (workerBall) {
         workerBall.terminate();
@@ -96,6 +114,8 @@ function mapToInternalAngle(visualAngle) {
     return Math.max(10, Math.min(80, visualAngle));
 }
 
+
+//Timer
 function startTimer() {
     const initialTime = 10; 
     workerTimer = new Worker('js/workers/workerTimer.js');

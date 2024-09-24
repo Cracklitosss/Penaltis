@@ -1,4 +1,4 @@
-const maxMovement = 220; 
+const maxMovement = 300; 
 let direction = 1;
 const speed = 3;
 let position = 0;  
